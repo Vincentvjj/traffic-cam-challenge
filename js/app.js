@@ -16,6 +16,7 @@ $(document).ready(function() {
         center: center,
         zoom: 12
     });
+    $('#map').css('height', $(window).height() - $('#map').position().top - 20);
 
     $(window).resize(function() {
         $('#map').css('height', $(window).height() - $('#map').position().top - 20);

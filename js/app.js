@@ -3,6 +3,85 @@
 
 "use strict";
 
+
+
+$(document).ready(function() {
+    var mapElem = document.getElementById('map');
+    var center = {
+        lat: 47.6,
+        lng: -122.3
+    };
+
+    var map = new google.maps.Map(mapElem, {
+        center: center,
+        zoom: 12
+    });
+
+    var infoWindow = new google.maps.InfoWindow();
+
+    $.getJSON('http://data.seattle.gov/resource/65fc-btcc.json')
+        .done(function(data) {
+            data.forEach(function(cameras) {
+                var marker = new google.maps.Marker({
+                    position: {
+                        lat: Number(cameras.location.latitude),
+                        lng: Number(cameras.location.longitude)
+                    },
+                    map: map
+                });
+
+                google.maps.event.addListener(marker, 'click', function() {
+                    var html = '<p>' + cameras.cameralabel + '</p>';
+                    html += '<img src="' + cameras.imageurl.url  + '"/>';
+                    map.panTo(marker.getPosition());
+                    infoWindow.setContent(html);
+                    infoWindow.open(map, this); 
+                })
+
+                var searchQuery = '';
+
+                $('#search').bind("search keyup", function() {
+
+                	searchQuery = this.value.toLowerCase();
+
+                	var n = cameras.cameralabel.toLowerCase().indexOf(searchQuery);
+
+
+                	if(n <= -1) {
+                		marker.setMap(null);
+                	}
+                	else {
+                		marker.setMap(map);
+                	}
+
+                });
+
+            });
+
+      //       $('#search').bind("search keyup", function() {
+      //       	console.log(data.length)
+      //       	console.log(data[0].cameralabel);
+      //        	data.forEach(function(cameraLabel) {
+
+      //        	})
+
+            
+    		// });
+
+        }).fail(function(err) {
+            alert(err);
+        }).always(function(){
+            $('#ajax-loader').fadeOut();
+        });
+
+
+    
+
+
+
+
+});
+
 //put your code here to create the map, fetch the list of traffic cameras
 //and add them as markers on the map
 //when a user clicks on a marker, you should pan the map so that the marker

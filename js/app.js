@@ -17,6 +17,12 @@ $(document).ready(function() {
         zoom: 12
     });
 
+    $(window).resize(function() {
+        $('#map').css('height', $(window).height() - $('#map').position().top - 20);
+
+
+    }); //resizes the map's height
+
     var infoWindow = new google.maps.InfoWindow();
 
     $.getJSON('http://data.seattle.gov/resource/65fc-btcc.json')
@@ -27,16 +33,23 @@ $(document).ready(function() {
                         lat: Number(cameras.location.latitude),
                         lng: Number(cameras.location.longitude)
                     },
-                    map: map
+                    map: map,
+                    animation: google.maps.Animation.DROP
+                });
+
+                google.maps.event.addListener(map, 'click', function() {
+                        infoWindow.close();
                 });
 
                 google.maps.event.addListener(marker, 'click', function() {
                     var html = '<p>' + cameras.cameralabel + '</p>';
                     html += '<img src="' + cameras.imageurl.url  + '"/>';
-                    map.panTo(marker.getPosition());
                     infoWindow.setContent(html);
                     infoWindow.open(map, this); 
-                })
+                    map.panTo(marker.getPosition());
+
+                });
+
 
                 var searchQuery = '';
 
@@ -73,6 +86,7 @@ $(document).ready(function() {
         }).always(function(){
             $('#ajax-loader').fadeOut();
         });
+
 
 
     

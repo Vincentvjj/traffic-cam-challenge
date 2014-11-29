@@ -24,7 +24,6 @@ $(document).ready(function() {
     }); //resizes the map's height
 
     var infoWindow = new google.maps.InfoWindow();
-    var icon = 'img/cctv4.png';
 
     $.getJSON('http://data.seattle.gov/resource/65fc-btcc.json')
         .done(function(data) {
@@ -36,7 +35,6 @@ $(document).ready(function() {
                     },
                     map: map,
                     animation: google.maps.Animation.DROP,
-                    icon: icon
                 });
 
                 google.maps.event.addListener(map, 'click', function() {
